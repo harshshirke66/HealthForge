@@ -1,33 +1,32 @@
 import { NextResponse } from 'next/server';
 import { groq, query } from '@/lib/config';
 
+// Simple in-memory rate limiter
+const lastMealRequest = new Map<string, number>();
+const RATE_LIMIT_MS = 3000; // 3 seconds
+
 export async function POST(request: Request) {
   try {
     const { mealDescription, userId } = await request.json();
+
+    // 1. Rate Limiting
+    const now = Date.now();
+    if (now - (lastMealRequest.get(userId) || 0) < RATE_LIMIT_MS) {
+      return NextResponse.json({ error: 'Slow down! One meal at a time.' }, { status: 429 });
+    }
+    lastMealRequest.set(userId, now);
 
     if (!mealDescription) {
       return NextResponse.json({ error: 'Meal description is required' }, { status: 400 });
     }
 
-    const prompt = `
-      Analyze the following meal description and provide nutritional information in JSON format.
-      Meal: "${mealDescription}"
-      
-      Respond only with a JSON object containing:
-      {
-        "name": "string",
-        "calories": number,
-        "protein": number,
-        "carbs": number,
-        "fat": number,
-        "reasoning": "string"
-      }
-    `;
+    const prompt = `Analyze: "${mealDescription}". Return JSON: name, calories, protein, carbs, fat, reasoning (max 10 words).`;
 
     const chatCompletion = await groq.chat.completions.create({
       messages: [{ role: 'user', content: prompt }],
-      model: 'llama3-8b-8192',
+      model: 'llama-3.1-8b-instant',
       response_format: { type: 'json_object' },
+      max_tokens: 300,
     });
 
     const nutritionData = JSON.parse(chatCompletion.choices[0].message.content || '{}');

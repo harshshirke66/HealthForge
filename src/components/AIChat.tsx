@@ -20,14 +20,18 @@ const AIChat: React.FC = () => {
     setLoading(true);
 
     try {
+      const storedUser = localStorage.getItem('user');
+      const userId = storedUser ? JSON.parse(storedUser).id : '1';
+
       const response = await axios.post('/api/ai/chat', {
         message: userMessage,
-        userId: 1 // Demo user
+        userId: userId
       });
 
       setMessages(prev => [...prev, { role: 'ai', content: response.data.response }]);
-    } catch (error) {
-      setMessages(prev => [...prev, { role: 'ai', content: "I'm sorry, I'm having trouble connecting right now. Please try again later." }]);
+    } catch (error: any) {
+      const errorMsg = error.response?.data?.error || "I'm having trouble connecting. Try again later.";
+      setMessages(prev => [...prev, { role: 'ai', content: errorMsg }]);
     } finally {
       setLoading(false);
     }
