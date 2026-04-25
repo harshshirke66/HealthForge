@@ -44,7 +44,7 @@ export default function LoginPage() {
       type="login"
     >
       <form className="auth-form" onSubmit={handleSubmit}>
-        {error && <div style={{ color: 'var(--accent-pink)', fontWeight: 'bold' }}>{error}</div>}
+        {error && <div className="error-message">{error}</div>}
         <div className="form-group">
           <label htmlFor="email">Email Address</label>
           <input 

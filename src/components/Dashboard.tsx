@@ -13,37 +13,55 @@ const Dashboard: React.FC = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [userId, setUserId] = useState<string>('1');
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        const storedUser = localStorage.getItem('user');
-        const id = storedUser ? JSON.parse(storedUser).id : '1';
-        setUserId(id);
-        
-        const response = await axios.get(`/api/dashboard?userId=${id}`);
-        setData(response.data);
-        
-        if (response.data.onboarded === false) {
-          setShowOnboarding(true);
-        }
-      } catch (error) {
-        console.error("Error fetching dashboard data", error);
-      } finally {
-        setLoading(false);
+  const fetchDashboardData = async () => {
+    try {
+      const storedUser = localStorage.getItem('user');
+      const id = storedUser ? JSON.parse(storedUser).id : '1';
+      setUserId(id);
+      
+      const response = await axios.get(`/api/dashboard?userId=${id}`);
+      setData(response.data);
+      
+      if (response.data.onboarded === false) {
+        setShowOnboarding(true);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching dashboard data", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchDashboardData();
+    window.addEventListener('refreshDashboard', fetchDashboardData);
+    return () => window.removeEventListener('refreshDashboard', fetchDashboardData);
   }, []);
 
-  if (loading) {
-    return (
-      <div className="dashboard-loader">
-        <Loader2 className="spinner" size={48} />
-        <p>Loading your health data...</p>
-      </div>
-    );
-  }
+  const handleWaterChange = async (amountMl: number) => {
+    try {
+      await axios.post('/api/user/water', { userId, amount_ml: amountMl });
+      fetchDashboardData(); // Refresh stats
+    } catch (error) {
+      console.error("Error logging water", error);
+    }
+  };
+
+  const handleWeightLog = async () => {
+    const weight = prompt("Enter your current weight (kg):");
+    if (!weight || isNaN(parseFloat(weight))) return;
+
+    try {
+      await axios.post('/api/user/weight', { userId, weight: parseFloat(weight) });
+      fetchDashboardData(); // Refresh stats
+    } catch (error) {
+      console.error("Error logging weight", error);
+    }
+  };
+
+  const caloriesRef = React.useRef<HTMLDivElement>(null);
+  const waterRef = React.useRef<HTMLDivElement>(null);
+  const proteinRef = React.useRef<HTMLDivElement>(null);
 
   const { summary, weightTrend, recentMeals } = data || { 
     summary: { calories: 0, protein: 0, water: 0 }, 
@@ -55,6 +73,21 @@ const Dashboard: React.FC = () => {
   const waterProgress = Math.min((summary.water / 2.5) * 100, 100);
   const proteinProgress = Math.min((summary.protein / 120) * 100, 100);
 
+  React.useEffect(() => {
+    if (caloriesRef.current) caloriesRef.current.style.setProperty('--progress', `${caloriesProgress}%`);
+    if (waterRef.current) waterRef.current.style.setProperty('--progress', `${waterProgress}%`);
+    if (proteinRef.current) proteinRef.current.style.setProperty('--progress', `${proteinProgress}%`);
+  }, [caloriesProgress, waterProgress, proteinProgress]);
+
+  if (loading) {
+    return (
+      <div className="dashboard-loader">
+        <Loader2 className="spinner" size={48} />
+        <p>Loading your health data...</p>
+      </div>
+    );
+  }
+
   return (
     <>
       {showOnboarding && (
@@ -62,7 +95,7 @@ const Dashboard: React.FC = () => {
           userId={userId} 
           onComplete={() => {
             setShowOnboarding(false);
-            window.location.reload(); // Refresh to get updated stats
+            fetchDashboardData();
           }} 
         />
       )}
@@ -76,10 +109,7 @@ const Dashboard: React.FC = () => {
         </div>
         <div className="metric-value">{summary.calories} <span className="unit">kcal</span></div>
         <div className="progress-bar-container">
-          <div 
-            className="progress-bar orange" 
-            style={{ '--progress': `${caloriesProgress}%` } as React.CSSProperties}
-          ></div>
+          <div ref={caloriesRef} className="progress-bar orange"></div>
         </div>
         <div className="metric-footer">Daily Target: 2,500</div>
       </div>
@@ -90,12 +120,15 @@ const Dashboard: React.FC = () => {
           <div className="icon-box blue"><Droplets size={20} /></div>
           <span>Water</span>
         </div>
-        <div className="metric-value">{summary.water.toFixed(1)} <span className="unit">L</span></div>
+        <div className="metric-value-row">
+          <div className="metric-value">{summary.water.toFixed(1)} <span className="unit">L</span></div>
+          <div className="quick-actions">
+            <button className="action-btn" onClick={() => handleWaterChange(-250)} title="Remove 250ml">-</button>
+            <button className="action-btn" onClick={() => handleWaterChange(250)} title="Add 250ml">+</button>
+          </div>
+        </div>
         <div className="progress-bar-container">
-          <div 
-            className="progress-bar blue" 
-            style={{ '--progress': `${waterProgress}%` } as React.CSSProperties}
-          ></div>
+          <div ref={waterRef} className="progress-bar blue"></div>
         </div>
         <div className="metric-footer">Daily Target: 2.5L</div>
       </div>
@@ -108,10 +141,7 @@ const Dashboard: React.FC = () => {
         </div>
         <div className="metric-value">{summary.protein} <span className="unit">g</span></div>
         <div className="progress-bar-container">
-          <div 
-            className="progress-bar purple" 
-            style={{ '--progress': `${proteinProgress}%` } as React.CSSProperties}
-          ></div>
+          <div ref={proteinRef} className="progress-bar purple"></div>
         </div>
         <div className="metric-footer">Daily Target: 120g</div>
       </div>
@@ -119,27 +149,54 @@ const Dashboard: React.FC = () => {
       {/* Main Charts & Trends */}
       <div className="chart-card glass span-2">
         <div className="card-header">
-          <h3>Weight Trend</h3>
-          <span className="subtitle">{weightTrend.length > 0 ? 'Last 7 logs' : 'No logs yet'}</span>
+          <div className="header-main">
+            <h3>Weight Trend</h3>
+            <span className="subtitle">{weightTrend.length > 0 ? 'Tracking Last 7 Logs' : 'No logs yet'}</span>
+          </div>
+          <button className="btn-primary btn-mini" onClick={handleWeightLog}>Log Weight</button>
         </div>
         <div className="chart-container">
           {weightTrend.length > 0 ? (
             <ResponsiveContainer width="100%" height={250}>
-              <AreaChart data={weightTrend}>
+              <AreaChart data={weightTrend} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorWeight" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.3}/>
+                    <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.1}/>
                     <stop offset="95%" stopColor="#4f46e5" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />
-                <YAxis hide domain={['dataMin - 1', 'dataMax + 1']} />
-                <Tooltip 
-                  contentStyle={{ background: '#1e293b', border: 'none', borderRadius: '12px', color: '#fff' }}
-                  itemStyle={{ color: '#fff' }}
+                <CartesianGrid strokeDasharray="3 3" stroke="#eee" vertical={false} />
+                <XAxis 
+                  dataKey="day" 
+                  axisLine={{ stroke: '#000', strokeWidth: 2 }} 
+                  tickLine={false} 
+                  tick={{fill: '#000', fontSize: 12, fontWeight: 700}} 
                 />
-                <Area type="monotone" dataKey="weight" stroke="#4f46e5" strokeWidth={3} fillOpacity={1} fill="url(#colorWeight)" />
+                <YAxis 
+                  axisLine={{ stroke: '#000', strokeWidth: 2 }}
+                  tickLine={false}
+                  tick={{fill: '#000', fontSize: 12, fontWeight: 700}}
+                  domain={['dataMin - 1', 'dataMax + 1']}
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    background: '#fff', 
+                    border: '3px solid #000', 
+                    borderRadius: '0',
+                    boxShadow: '4px 4px 0px #000',
+                    fontWeight: 800
+                  }}
+                  itemStyle={{ color: '#000' }}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="weight" 
+                  stroke="#4f46e5" 
+                  strokeWidth={4} 
+                  fillOpacity={1} 
+                  fill="url(#colorWeight)" 
+                  animationDuration={1500}
+                />
               </AreaChart>
             </ResponsiveContainer>
           ) : (
@@ -186,7 +243,9 @@ const Dashboard: React.FC = () => {
               <div key={i} className="meal-row">
                   <div className="meal-info">
                       <span className="meal-name">{meal.name}</span>
-                      <span className="meal-time">{meal.time}</span>
+                      <span className="meal-time">
+                        {new Date(meal.logged_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
                   </div>
                   <div className="meal-stats">
                       <span className="stat">{meal.calories} kcal</span>

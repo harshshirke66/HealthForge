@@ -3,7 +3,73 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   padding-bottom: 40px;
-  position: relative; /* For absolute onboarding overlay */
+  position: relative;
+}
+
+.metric-value-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.quick-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 2px solid #000;
+  background: #fff;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px #000;
+  transition: all 0.1s;
+}
+
+.action-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px #000;
+  background: var(--accent-cyan);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.header-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.subtitle {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.btn-mini {
+  padding: 6px 12px;
+  background: var(--accent-yellow);
+  border: 2px solid #000;
+  box-shadow: 3px 3px 0px #000;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+
+.btn-mini:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #000;
 }
 
 .span-2 {

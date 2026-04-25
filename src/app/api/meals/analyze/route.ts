@@ -20,7 +20,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Meal description is required' }, { status: 400 });
     }
 
-    const prompt = `Analyze: "${mealDescription}". Return JSON: name, calories, protein, carbs, fat, reasoning (max 10 words).`;
+    const prompt = `Analyze this meal: "${mealDescription}". 
+    Provide highly accurate nutritional estimates based on standard portion sizes.
+    Return a JSON object with: 
+    - name: string (short, descriptive)
+    - calories: number (kcal)
+    - protein: number (grams)
+    - carbs: number (grams)
+    - fat: number (grams)
+    - reasoning: string (max 12 words explaining the estimate)
+    
+    Ensure the numbers are realistic for the food described.`;
 
     const chatCompletion = await groq.chat.completions.create({
       messages: [{ role: 'user', content: prompt }],
@@ -31,15 +41,9 @@ export async function POST(request: Request) {
 
     const nutritionData = JSON.parse(chatCompletion.choices[0].message.content || '{}');
 
-    // Save to database
-    const dbResult = await query(
-      'INSERT INTO meals (user_id, name, calories, protein, carbs, fat) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [userId, nutritionData.name, nutritionData.calories, nutritionData.protein, nutritionData.carbs, nutritionData.fat]
-    );
-
     return NextResponse.json({
-      message: 'Meal analyzed and saved',
-      data: dbResult.rows[0],
+      message: 'Meal analyzed',
+      data: nutritionData,
       ai_reasoning: nutritionData.reasoning
     });
   } catch (error) {

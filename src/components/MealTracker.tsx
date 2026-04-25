@@ -7,12 +7,24 @@ import './MealTracker.css';
 interface MealTrackerProps {
   isOpen: boolean;
   onClose: () => void;
+  onSave?: () => void;
 }
 
-const MealTracker: React.FC<MealTrackerProps> = ({ isOpen, onClose }) => {
+const MealTracker: React.FC<MealTrackerProps> = ({ isOpen, onClose, onSave }) => {
   const [description, setDescription] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [result, setResult] = useState<any>(null);
+  const [category, setCategory] = useState<string>('Breakfast');
+
+  const categories = ['Breakfast', 'Lunch', 'Evening Snacks', 'Dinner', 'Other'];
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setDescription('');
+      setResult(null);
+      setLoading(false);
+    }
+  }, [isOpen]);
 
   const handleAnalyze = async () => {
     if (!description) return;
@@ -53,7 +65,19 @@ const MealTracker: React.FC<MealTrackerProps> = ({ isOpen, onClose }) => {
         </header>
 
         <div className="modal-body">
-          <p className="description">Describe what you ate, or use voice. AI will handle the macros.</p>
+          <div className="category-selector">
+            {categories.map(cat => (
+              <button 
+                key={cat}
+                className={`cat-btn ${category === cat ? 'active' : ''}`}
+                onClick={() => setCategory(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          <p className="description">Describe what you ate. AI will handle the rest.</p>
           
           <div className="input-group">
             <textarea 
@@ -106,10 +130,33 @@ const MealTracker: React.FC<MealTrackerProps> = ({ isOpen, onClose }) => {
               <p className="ai-note">{result.ai_reasoning}</p>
               <button 
                 className="btn-primary save-btn" 
-                onClick={onClose}
+                onClick={async () => {
+                  if (loading) return;
+                  setLoading(true);
+                  try {
+                    const storedUser = localStorage.getItem('user');
+                    const userId = storedUser ? JSON.parse(storedUser).id : '1';
+                    
+                    await axios.post('/api/meals', {
+                      ...result.data,
+                      userId,
+                      category
+                    });
+                    
+                    if (onSave) onSave();
+                    window.dispatchEvent(new Event('refreshDashboard'));
+                    onClose();
+                  } catch (err) {
+                    console.error(err);
+                    alert("Failed to save meal.");
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+                disabled={loading}
                 title="Confirm and save meal"
               >
-                Confirm & Save
+                {loading ? 'Saving...' : 'Confirm & Save'}
               </button>
             </div>
           )}

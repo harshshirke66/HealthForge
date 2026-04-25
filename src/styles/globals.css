@@ -6,11 +6,15 @@
   --bg-card: #ffffff;
   --text-main: #000000;
   --text-muted: #444444;
-  --accent-yellow: #f8e71c;
-  --accent-green: #2ecc71;
-  --accent-pink: #ff6b6b;
-  --accent-cyan: #00d2d3;
-  --border-black: 3px solid #000000;
+   --accent-yellow: #f8e71c;
+   --accent-green: #2ecc71;
+   --accent-pink: #ff6b6b;
+   --accent-cyan: #00d2d3;
+   --accent-indigo: #4f46e5;
+   --accent-purple: #9b59b6;
+   --accent-orange: #f39c12;
+   --accent-red: #ff4d4d;
+   --border-black: 3px solid #000000;
   --shadow-hard: 6px 6px 0px #000000;
   --shadow-hard-hover: 10px 10px 0px #000000;
   --radius-neo: 0px; /* Neobrutalism often uses sharp or very slight radii */
