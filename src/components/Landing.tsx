@@ -15,7 +15,6 @@ const Landing: React.FC = () => {
         </div>
         <div className="nav-links">
           <Link href="#features">Features</Link>
-          <Link href="#science">Science</Link>
           <Link href="/login" className="btn-secondary">Login</Link>
           <Link href="/signup" className="btn-primary-landing">Get Started</Link>
         </div>
