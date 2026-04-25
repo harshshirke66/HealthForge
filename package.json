@@ -4,13 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "set NEXT_DISABLE_SWC=1 && next dev --webpack",
-    "build": "next build --webpack",
-    "start": "next start",
+    "build": "set NEXT_DISABLE_SWC=1 && next build --webpack",
+    "start": "set NEXT_DISABLE_SWC=1 && next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@neondatabase/serverless": "latest",
     "clsx": "latest",
+    "dotenv": "^17.4.2",
     "framer-motion": "latest",
     "groq-sdk": "latest",
     "lucide-react": "latest",
