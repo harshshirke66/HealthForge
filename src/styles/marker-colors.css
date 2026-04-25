@@ -1,0 +1,7 @@
+.marker-dashboard { --marker-color: var(--accent-yellow); }
+.marker-nutrition { --marker-color: var(--accent-cyan); }
+.marker-sleep { --marker-color: var(--accent-indigo); }
+.marker-fitness { --marker-color: var(--accent-orange); }
+.marker-history { --marker-color: var(--accent-purple); }
+.marker-ai { --marker-color: var(--accent-yellow); }
+.marker-settings { --marker-color: var(--accent-yellow); }
