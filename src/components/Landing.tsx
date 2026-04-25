@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Activity, Brain, Shield, Zap, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Activity, Brain, Shield, Zap, CheckCircle2, Flame } from 'lucide-react';
 import './Landing.css';
 
 const Landing: React.FC = () => {
@@ -55,16 +55,30 @@ const Landing: React.FC = () => {
           </div>
         </div>
         <div className="hero-visual animate-float">
-          <div className="hero-image-container glass">
-             <img src="/health_forge_hero_1777130631012.png" alt="HealthForge Intelligence" />
-             <div className="floating-card c1 glass animate-pulse-slow">
+          <div className="hero-composition">
+             <div className="comp-grid"></div>
+             
+             <div className="comp-core glass animate-pulse-slow">
+                <div className="core-circle">
+                   <div className="core-inner-circle spin-infinite"></div>
+                </div>
+                <h3>AI Health Core</h3>
+             </div>
+
+             <div className="comp-bars">
+                <div className="bar b1"></div>
+                <div className="bar b2"></div>
+                <div className="bar b3"></div>
+             </div>
+
+             <div className="floating-card c1 glass">
                 <Activity size={24} className="icon-cyan" />
                 <div>
                   <small>Heart Rate</small>
                   <strong>72 BPM</strong>
                 </div>
              </div>
-             <div className="floating-card c2 glass animate-pulse-slow-delay">
+             <div className="floating-card c2 glass">
                 <Zap size={24} className="icon-purple" />
                 <div>
                   <small>Energy Level</small>
@@ -75,76 +89,112 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section id="features" className="features-section">
+      {/* Bento Box Features */}
+      <section id="features" className="bento-section">
         <div className="section-header">
-          <h2>Precision Tools for <span className="gradient-text">Performance</span></h2>
-          <p>Everything you need to master your biology.</p>
+           <h2>Unfair <span className="gradient-text">Advantage</span></h2>
+           <p>The entire health stack, reimagined for the modern human.</p>
         </div>
-        <div className="features-grid">
-          <FeatureCard 
-            icon={<Brain size={32} />} 
-            title="AI Health Coach" 
-            desc="Personalized insights driven by your unique bio-data and daily habits." 
-          />
-          <FeatureCard 
-            icon={<Activity size={32} />} 
-            title="Real-time Tracking" 
-            desc="Seamlessly monitor calories, macros, water, and sleep with precision." 
-          />
-          <FeatureCard 
-            icon={<Shield size={32} />} 
-            title="Data Privacy" 
-            desc="Your health data is encrypted and secure. You own your information." 
-          />
+        
+        <div className="bento-grid">
+           {/* Big Main Box */}
+           <div className="bento-card bento-large glass">
+              <div className="bento-icon-wrapper cyan">
+                <Brain size={40} />
+              </div>
+              <div className="bento-text">
+                <h3>Groq AI Intelligence</h3>
+                <p>Lightning fast LLaMa 3.1 analysis provides instant, actionable feedback on your daily inputs without waiting.</p>
+              </div>
+           </div>
+
+           {/* Top Right Box */}
+           <div className="bento-card glass">
+              <div className="bento-icon-wrapper orange">
+                <Flame size={32} />
+              </div>
+              <div className="bento-text">
+                <h3>Dynamic Home Workouts</h3>
+                <p>Zero equipment needed. Fresh, AI-generated routines crafted daily to match your energy.</p>
+              </div>
+           </div>
+
+           {/* Bottom Right Box */}
+           <div className="bento-card glass">
+              <div className="bento-icon-wrapper yellow">
+                <Zap size={32} />
+              </div>
+              <div className="bento-text">
+                <h3>Caloric Precision</h3>
+                <p>Track macros and micros with an interactive, fluid dashboard that stays out of your way.</p>
+              </div>
+           </div>
+
+           {/* Full Width Bottom Box */}
+           <div className="bento-card bento-wide glass">
+              <div className="bento-flex">
+                 <div className="bento-icon-wrapper purple"><Shield size={40} /></div>
+                 <div className="bento-text">
+                   <h3>Absolute Data Sovereignty</h3>
+                   <p>Your biometric data is securely stored. Zero third-party telemetry. No ads. Just pure, unadulterated privacy.</p>
+                 </div>
+              </div>
+           </div>
         </div>
       </section>
 
-      {/* Social Proof */}
-      <section className="cta-section glass">
-        <div className="cta-content">
-          <h2>Ready to transform?</h2>
-          <p>Join thousands of athletes and health-conscious individuals today.</p>
-          <Link href="/signup" className="btn-primary-landing xlarge">Create Your Profile</Link>
-        </div>
+      {/* Massive Typography Manifesto */}
+      <section className="manifesto-section">
+         <div className="manifesto-marquee">
+            <span>NO EXCUSES • ONLY DATA • MASTER YOUR BIOLOGY • NO EXCUSES • ONLY DATA • </span>
+         </div>
+         <div className="manifesto-cta">
+            <Link href="/signup" className="btn-primary-landing xlarge animate-pulse-slow">
+               Initialize System
+            </Link>
+         </div>
       </section>
-
-      {/* Marquee Ticker */}
-      <div className="marquee-container">
-        <div className="marquee-content">
-          <span>AI COACHING</span> <div className="star">✦</div>
-          <span>REAL-TIME MACROS</span> <div className="star">✦</div>
-          <span>BIO-PRECISION</span> <div className="star">✦</div>
-          <span>NEO-HEALTH</span> <div className="star">✦</div>
-          <span>AI COACHING</span> <div className="star">✦</div>
-          <span>REAL-TIME MACROS</span> <div className="star">✦</div>
-          <span>BIO-PRECISION</span> <div className="star">✦</div>
-          <span>NEO-HEALTH</span> <div className="star">✦</div>
-        </div>
-      </div>
 
       {/* Grid Section Decoration */}
       <div className="grid-decoration"></div>
 
       <footer className="landing-footer">
-        <div className="footer-logo">
-          <div className="logo-icon small">HF</div>
-          <span>HealthForge</span>
+        <div className="footer-grid">
+           <div className="footer-brand">
+             <div className="logo-icon large">HF</div>
+             <p>The ultimate AI-driven health intelligence system. Stop guessing. Start tracking.</p>
+           </div>
+           
+           <div className="footer-links">
+             <div className="link-column">
+                <h4>System</h4>
+                <Link href="#features">Core Features</Link>
+                <Link href="/login">User Dashboard</Link>
+                <Link href="/login">Initialize Login</Link>
+             </div>
+             <div className="link-column">
+                <h4>Protocol</h4>
+                <Link href="/privacy">Privacy Directive</Link>
+                <Link href="/terms">Terms of Service</Link>
+                <Link href="/data">Data Sovereignty</Link>
+             </div>
+           </div>
         </div>
+
+        <div className="footer-huge-text">
+           HEALTHFORGE
+        </div>
+
         <div className="footer-bottom">
-          <p>&copy; 2026 HealthForge AI. All rights reserved.</p>
+          <div className="system-status">
+            <span className="pulse-dot"></span>
+            System Status: <strong>Optimal</strong>
+          </div>
+          <p>Version 1.0.0 &copy; 2026 HealthForge</p>
         </div>
       </footer>
     </div>
   );
 };
-
-const FeatureCard = ({ icon, title, desc }: { icon: any, title: string, desc: string }) => (
-  <div className="feature-card glass glass-hover">
-    <div className="feature-icon">{icon}</div>
-    <h3>{title}</h3>
-    <p>{desc}</p>
-  </div>
-);
 
 export default Landing;
