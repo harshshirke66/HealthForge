@@ -9,6 +9,7 @@ import HistorySection from '@/components/HistorySection';
 import AIChat from './AIChat';
 import MealTracker from './MealTracker';
 import './Layout.css';
+import '../styles/marker-colors.css';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -117,7 +118,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       <main className="main-content">
         <header className="main-header">
-          <h1>{activeTab === 'Dashboard' ? 'Welcome back, Harsh' : activeTab}</h1>
+          <h1>
+            <span 
+              className={`marker-highlight marker-${activeTab.toLowerCase().split(' ')[0]}`}
+            >
+              {activeTab === 'Dashboard' ? 'Welcome back, Harsh' : activeTab}
+            </span>
+          </h1>
           <div className="header-actions">
             <button className="btn-primary" onClick={() => setMealModalOpen(true)}>Track Meal</button>
           </div>
