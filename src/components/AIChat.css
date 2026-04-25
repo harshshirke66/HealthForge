@@ -6,6 +6,12 @@
   margin-top: 24px;
 }
 
+@media (max-width: 768px) {
+  .chat-container {
+    height: 400px;
+  }
+}
+
 .chat-messages {
   flex: 1;
   padding: 24px;
@@ -19,6 +25,12 @@
   display: flex;
   gap: 12px;
   max-width: 85%;
+}
+
+@media (max-width: 768px) {
+  .message-wrapper {
+    max-width: 95%;
+  }
 }
 
 .message-wrapper.user {
