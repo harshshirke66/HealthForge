@@ -22,15 +22,17 @@ export async function POST(request: Request) {
 
     const prompt = `Analyze this meal: "${mealDescription}". 
     Provide highly accurate nutritional estimates based on standard portion sizes.
-    Return a JSON object with: 
-    - name: string (short, descriptive)
-    - calories: number (kcal)
-    - protein: number (grams)
-    - carbs: number (grams)
-    - fat: number (grams)
-    - reasoning: string (max 12 words explaining the estimate)
-    
-    Ensure the numbers are realistic for the food described.`;
+    You MUST return ONLY a valid JSON object. Do not wrap it in another object.
+    Use EXACTLY these lowercase keys:
+    {
+      "name": "short descriptive name",
+      "calories": 400,
+      "protein": 25,
+      "carbs": 40,
+      "fat": 15,
+      "reasoning": "short reasoning max 12 words"
+    }
+    Ensure all numbers are realistic integers.`;
 
     const chatCompletion = await groq.chat.completions.create({
       messages: [{ role: 'user', content: prompt }],
@@ -39,7 +41,12 @@ export async function POST(request: Request) {
       max_tokens: 300,
     });
 
-    const nutritionData = JSON.parse(chatCompletion.choices[0].message.content || '{}');
+    let rawContent = chatCompletion.choices[0].message.content || '{}';
+    // Strip markdown formatting if the model wraps the JSON
+    if (rawContent.includes('```')) {
+      rawContent = rawContent.replace(/```json/g, '').replace(/```/g, '').trim();
+    }
+    const nutritionData = JSON.parse(rawContent);
 
     return NextResponse.json({
       message: 'Meal analyzed',

@@ -108,23 +108,23 @@ const MealTracker: React.FC<MealTrackerProps> = ({ isOpen, onClose, onSave }) =>
 
           {result && (
             <div className="analysis-result glass animate-fade-in">
-              <h3>{result.data.name}</h3>
+              <h3>{result.data.name || 'Unknown Meal'}</h3>
               <div className="result-grid">
                 <div className="res-stat">
                   <span>Calories</span>
-                  <strong>{result.data.calories}</strong>
+                  <strong>{result.data.calories || 0}</strong>
                 </div>
                 <div className="res-stat">
                   <span>Protein</span>
-                  <strong>{result.data.protein}g</strong>
+                  <strong>{result.data.protein || 0}g</strong>
                 </div>
                 <div className="res-stat">
                   <span>Carbs</span>
-                  <strong>{result.data.carbs}g</strong>
+                  <strong>{result.data.carbs || 0}g</strong>
                 </div>
                 <div className="res-stat">
                   <span>Fat</span>
-                  <strong>{result.data.fat}g</strong>
+                  <strong>{result.data.fat || 0}g</strong>
                 </div>
               </div>
               <p className="ai-note">{result.ai_reasoning}</p>

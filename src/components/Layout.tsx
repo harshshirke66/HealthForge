@@ -5,8 +5,7 @@ import Dashboard from './Dashboard';
 import NutritionSection from './NutritionSection';
 import SleepSection from './SleepSection';
 import FitnessSection from './FitnessSection';
-import HistorySection from './HistorySection';
-
+import HistorySection from '@/components/HistorySection';
 import AIChat from './AIChat';
 import MealTracker from './MealTracker';
 import './Layout.css';
@@ -18,6 +17,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [isMealModalOpen, setMealModalOpen] = useState(false);
+  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -29,6 +29,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       case 'AI Assistant': return (
         <div className="section-container animate-fade-in ai-full-page">
           <AIChat />
+        </div>
+      );
+      case 'Settings': return (
+        <div className="section-container animate-fade-in">
+          <div className="metric-card glass settings-placeholder">
+             <Settings className="settings-icon" size={40} />
+             <h2>Settings & Preferences</h2>
+             <p>Account configuration, notification preferences, and API keys will be managed here.</p>
+             <button className="btn-primary back-btn" onClick={() => setActiveTab('Dashboard')}>Back to Dashboard</button>
+          </div>
         </div>
       );
       default: return <Dashboard />;
@@ -83,8 +93,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </nav>
 
         <div className="sidebar-footer">
-          <NavItem icon={<Settings size={20} />} label="Settings" />
-          <div className="user-profile">
+          <NavItem 
+            icon={<Settings size={20} />} 
+            label="Settings" 
+            active={activeTab === 'Settings'}
+            onClick={() => setActiveTab('Settings')}
+          />
+          <div 
+            className="user-profile clickable" 
+            onClick={() => setLogoutModalOpen(true)}
+            title="Click to Logout"
+          >
             <div className="avatar glass">
               <User size={18} />
             </div>
@@ -108,6 +127,37 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
       </main>
       <MealTracker isOpen={isMealModalOpen} onClose={() => setMealModalOpen(false)} />
+
+      {isLogoutModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content glass animate-slide-up">
+            <div className="modal-header">
+              <h2>Ready to leave?</h2>
+              <button className="close-btn" onClick={() => setLogoutModalOpen(false)}>×</button>
+            </div>
+            <p className="modal-warning-text">
+              Are you sure you want to log out of your session? You will need to sign back in to access your data.
+            </p>
+            <div className="modal-actions-row">
+              <button 
+                className="btn-secondary modal-action-btn" 
+                onClick={() => setLogoutModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                className="btn-primary modal-action-btn logout-danger-btn" 
+                onClick={() => {
+                  localStorage.removeItem('user');
+                  window.location.href = '/login';
+                }}
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

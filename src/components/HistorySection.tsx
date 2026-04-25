@@ -7,7 +7,7 @@ const HistorySection: React.FC = () => {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [historyData, setHistoryData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [suggestions, setSuggestions] = useState<string | null>(null);
+  const [suggestions, setSuggestions] = useState<string[] | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
 
   const fetchHistory = async () => {
@@ -34,13 +34,14 @@ const HistorySection: React.FC = () => {
     setAnalyzing(true);
     try {
       const response = await axios.post('/api/ai/chat', {
+        format: 'json',
         message: `Analyze my data for ${date}: 
           Meals: ${JSON.stringify(historyData.meals)}
           Sleep: ${JSON.stringify(historyData.sleep)}
           Summary: ${JSON.stringify(historyData.summary)}
           Provide 3 short, actionable suggestions to improve my health based on this specific day.`
       });
-      setSuggestions(response.data.reply);
+      setSuggestions(response.data.response.insights);
     } catch (err) {
       console.error(err);
     } finally {
@@ -122,7 +123,13 @@ const HistorySection: React.FC = () => {
             <div className="ai-content">
               {suggestions ? (
                 <div className="suggestions-box animate-fade-in">
-                  <p>{suggestions}</p>
+                  <ul className="insights-list">
+                    {suggestions.map((insight, idx) => (
+                      <li key={idx} className="insight-item">
+                        {insight}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               ) : (
                 <div className="ai-cta">
