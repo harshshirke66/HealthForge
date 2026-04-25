@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from 'react';
-import { LayoutDashboard, Utensils, Moon, Activity, MessageSquare, Settings, User, Clock } from 'lucide-react';
+import { LayoutDashboard, Utensils, Moon, Activity, MessageSquare, Settings, User, Clock, Menu, X } from 'lucide-react';
 import Dashboard from './Dashboard';
 import NutritionSection from './NutritionSection';
 import SleepSection from './SleepSection';
@@ -19,6 +19,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [isMealModalOpen, setMealModalOpen] = useState(false);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
+  const closeSidebar = () => setSidebarOpen(false);
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    closeSidebar();
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -47,11 +56,19 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   return (
-    <div className="layout-container bg-gradient-mesh">
-      <aside className="sidebar glass">
+    <div className={`layout-container ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+      {/* Mobile Overlay */}
+      {isSidebarOpen && <div className="sidebar-overlay" onClick={closeSidebar}></div>}
+
+      <aside className={`sidebar glass ${isSidebarOpen ? 'open' : ''}`}>
         <div className="logo">
-          <div className="logo-icon">HF</div>
-          <span>HealthForge</span>
+          <div className="logo-flex">
+            <div className="logo-icon">HF</div>
+            <span>HealthForge</span>
+          </div>
+          <button className="sidebar-close" onClick={closeSidebar} aria-label="Close Menu">
+            <X size={24} />
+          </button>
         </div>
         
         <nav className="nav-menu">
@@ -59,37 +76,37 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             icon={<LayoutDashboard size={20} />} 
             label="Dashboard" 
             active={activeTab === 'Dashboard'} 
-            onClick={() => setActiveTab('Dashboard')}
+            onClick={() => handleTabChange('Dashboard')}
           />
           <NavItem 
             icon={<Utensils size={20} />} 
             label="Nutrition" 
             active={activeTab === 'Nutrition'} 
-            onClick={() => setActiveTab('Nutrition')}
+            onClick={() => handleTabChange('Nutrition')}
           />
           <NavItem 
             icon={<Moon size={20} />} 
             label="Sleep" 
             active={activeTab === 'Sleep'} 
-            onClick={() => setActiveTab('Sleep')}
+            onClick={() => handleTabChange('Sleep')}
           />
           <NavItem 
             icon={<Activity size={20} />} 
             label="Fitness" 
             active={activeTab === 'Fitness'} 
-            onClick={() => setActiveTab('Fitness')}
+            onClick={() => handleTabChange('Fitness')}
           />
           <NavItem 
             icon={<Clock size={20} />} 
             label="History" 
             active={activeTab === 'History'} 
-            onClick={() => setActiveTab('History')}
+            onClick={() => handleTabChange('History')}
           />
           <NavItem 
             icon={<MessageSquare size={20} />} 
             label="AI Assistant" 
             active={activeTab === 'AI Assistant'} 
-            onClick={() => setActiveTab('AI Assistant')}
+            onClick={() => handleTabChange('AI Assistant')}
           />
         </nav>
 
@@ -98,7 +115,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             icon={<Settings size={20} />} 
             label="Settings" 
             active={activeTab === 'Settings'}
-            onClick={() => setActiveTab('Settings')}
+            onClick={() => handleTabChange('Settings')}
           />
           <div 
             className="user-profile clickable" 
@@ -118,6 +135,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       <main className="main-content">
         <header className="main-header">
+          {!isSidebarOpen && (
+            <button 
+              className="menu-toggle" 
+              onClick={toggleSidebar}
+              title="Toggle Sidebar Menu"
+              aria-label="Toggle Sidebar Menu"
+            >
+              <Menu size={24} />
+            </button>
+          )}
           <h1>
             <span 
               className={`marker-highlight marker-${activeTab.toLowerCase().split(' ')[0]}`}
