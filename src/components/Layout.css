@@ -2,8 +2,9 @@
   display: flex;
   height: 100vh;
   width: 100vw;
-  padding: 24px;
-  gap: 24px;
+  padding: 20px;
+  gap: 20px;
+  background-color: var(--bg-main);
 }
 
 .sidebar {
@@ -17,28 +18,33 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 0 16px;
-  margin-bottom: 48px;
+  gap: 16px;
+  padding: 0 12px;
+  margin-bottom: 40px;
 }
 
 .logo-icon {
-  width: 40px;
-  height: 40px;
-  background: var(--primary);
-  border-radius: 12px;
+  width: 44px;
+  height: 44px;
+  background: var(--accent-yellow);
+  border: var(--border-black);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 1.2rem;
-  box-shadow: 0 8px 16px rgba(79, 70, 229, 0.3);
+  font-weight: 900;
+  font-size: 1.3rem;
+  color: #000;
+  box-shadow: 4px 4px 0px #000;
+  position: relative;
+  overflow: hidden;
 }
 
 .logo span {
-  font-size: 1.4rem;
-  font-weight: 600;
-  letter-spacing: -0.5px;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: #000;
+  text-transform: uppercase;
 }
 
 .nav-menu {
@@ -51,23 +57,28 @@
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  border-radius: 14px;
-  color: var(--text-muted);
+  gap: 14px;
+  padding: 14px 18px;
+  color: #000;
   cursor: pointer;
   transition: all 0.2s ease;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 2px solid transparent;
 }
 
 .nav-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-main);
+  background: var(--accent-cyan);
+  border: 2px solid #000;
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0px #000;
 }
 
 .nav-item.active {
-  background: var(--primary);
-  color: white;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+  background: var(--accent-yellow);
+  color: #000;
+  border: 2px solid #000;
+  box-shadow: 4px 4px 0px #000;
 }
 
 .sidebar-footer {
@@ -138,18 +149,18 @@
 }
 
 .btn-primary {
-  background: var(--primary);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 12px;
-  font-weight: 600;
+  background: var(--accent-pink);
+  color: #000;
+  border: var(--border-black);
+  padding: 12px 28px;
+  font-weight: 900;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+  transition: all 0.1s ease;
+  box-shadow: 4px 4px 0px #000;
 }
 
 .btn-primary:hover {
-  background: var(--primary-hover);
-  transform: translateY(-2px);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px #000;
 }

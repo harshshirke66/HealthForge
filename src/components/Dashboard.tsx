@@ -48,6 +48,7 @@ const Dashboard: React.FC = () => {
     <div className="dashboard-grid animate-fade-in">
       {/* Top row: Summary Cards */}
       <div className="metric-card glass glass-hover">
+        <div className="metric-bg-pattern"></div>
         <div className="metric-header">
           <div className="icon-box orange"><Flame size={20} /></div>
           <span>Calories</span>
@@ -56,13 +57,14 @@ const Dashboard: React.FC = () => {
         <div className="progress-bar-container">
           <div 
             className="progress-bar orange" 
-            style={{ '--progress': `${caloriesProgress}%` } as CSSProperties}
+            style={{ width: `${caloriesProgress}%` } as CSSProperties}
           ></div>
         </div>
         <div className="metric-footer">Daily Target: 2,500</div>
       </div>
 
       <div className="metric-card glass glass-hover">
+        <div className="metric-bg-pattern"></div>
         <div className="metric-header">
           <div className="icon-box blue"><Droplets size={20} /></div>
           <span>Water</span>
@@ -71,13 +73,14 @@ const Dashboard: React.FC = () => {
         <div className="progress-bar-container">
           <div 
             className="progress-bar blue" 
-            style={{ '--progress': `${waterProgress}%` } as CSSProperties}
+            style={{ width: `${waterProgress}%` } as CSSProperties}
           ></div>
         </div>
         <div className="metric-footer">Daily Target: 2.5L</div>
       </div>
 
       <div className="metric-card glass glass-hover">
+        <div className="metric-bg-pattern"></div>
         <div className="metric-header">
           <div className="icon-box purple"><Zap size={20} /></div>
           <span>Protein</span>
@@ -86,7 +89,7 @@ const Dashboard: React.FC = () => {
         <div className="progress-bar-container">
           <div 
             className="progress-bar purple" 
-            style={{ '--progress': `${proteinProgress}%` } as CSSProperties}
+            style={{ width: `${proteinProgress}%` } as CSSProperties}
           ></div>
         </div>
         <div className="metric-footer">Daily Target: 120g</div>
