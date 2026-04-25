@@ -1,0 +1,208 @@
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  padding-bottom: 40px;
+}
+
+.span-2 {
+  grid-column: span 2;
+}
+
+.span-3 {
+  grid-column: span 3;
+}
+
+.metric-card {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.metric-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-box.orange { background: rgba(249, 115, 22, 0.1); color: #f97316; }
+.icon-box.blue { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+.icon-box.purple { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+
+.metric-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.unit {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.progress-bar-container {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  border-radius: 3px;
+}
+
+.metric-footer {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.chart-card {
+  padding: 24px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.card-header h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.ai-insight-card {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header.ai {
+  color: var(--accent-cyan);
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.insight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.insight-item {
+  display: flex;
+  gap: 12px;
+}
+
+.bullet {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  margin-top: 8px;
+  flex-shrink: 0;
+}
+
+.insight-item p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-main);
+}
+
+.btn-outline {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid var(--border-glass);
+  color: var(--text-main);
+  border-radius: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--text-muted);
+}
+
+.meal-table {
+    display: flex;
+    flex-direction: column;
+}
+
+.meal-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border-glass);
+}
+
+.meal-row:last-child {
+    border-bottom: none;
+}
+
+.meal-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.meal-name {
+    font-weight: 500;
+}
+
+.meal-time {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.meal-stats {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.stat {
+    background: rgba(255,255,255,0.05);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.stat.protein {
+    color: var(--accent-purple);
+    background: rgba(139, 92, 246, 0.1);
+}
+
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  .span-2, .span-3 {
+    grid-column: span 1;
+  }
+}

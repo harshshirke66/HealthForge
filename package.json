@@ -1,0 +1,32 @@
+{
+  "name": "health-forge",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "set NEXT_DISABLE_SWC=1 && next dev --webpack",
+    "build": "next build --webpack",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "lucide-react": "latest",
+    "recharts": "latest",
+    "framer-motion": "latest",
+    "axios": "latest",
+    "groq-sdk": "latest",
+    "@neondatabase/serverless": "latest",
+    "clsx": "latest",
+    "tailwind-merge": "latest"
+  },
+  "devDependencies": {
+    "typescript": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "eslint": "latest",
+    "eslint-config-next": "latest"
+  }
+}
