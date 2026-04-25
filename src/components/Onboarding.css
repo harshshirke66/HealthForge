@@ -9,22 +9,30 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 8vh;
+  padding: 4vh 20px;
   z-index: 99999;
   box-sizing: border-box;
-  overflow: hidden; /* Prevent any scroll inside overlay */
+  overflow-y: auto;
 }
 
 .onboarding-content {
   max-width: 680px !important;
-  width: 90%;
+  width: 100%;
   background: #fff !important;
   border: 4px solid #000 !important;
   box-shadow: 20px 20px 0px #000 !important;
   padding: 40px !important;
   position: relative;
   box-sizing: border-box;
+  margin-bottom: 40px;
   animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@media (max-width: 480px) {
+  .onboarding-content {
+    padding: 24px !important;
+    box-shadow: 10px 10px 0px #000 !important;
+  }
 }
 
 @keyframes slideDown {
