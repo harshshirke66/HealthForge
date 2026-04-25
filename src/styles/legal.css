@@ -22,6 +22,20 @@
   position: relative;
 }
 
+@media (max-width: 768px) {
+  .legal-content {
+    padding: 60px 30px;
+    box-shadow: 10px 10px 0px #000;
+  }
+}
+
+@media (max-width: 480px) {
+  .legal-content {
+    padding: 40px 20px;
+    border-width: 4px;
+  }
+}
+
 .legal-badge {
   position: absolute;
   top: -24px;
@@ -37,11 +51,21 @@
   letter-spacing: 1px;
 }
 
+@media (max-width: 600px) {
+  .legal-badge {
+    position: static;
+    display: inline-block;
+    margin-bottom: 20px;
+    transform: none;
+    box-shadow: 4px 4px 0px #000;
+  }
+}
+
 .legal-content.terms .legal-badge { background: var(--accent-pink); }
 .legal-content.data .legal-badge { background: var(--accent-cyan); }
 
 .legal-content h1 {
-  font-size: 3.5rem;
+  font-size: clamp(2rem, 10vw, 3.5rem);
   font-weight: 900;
   text-transform: uppercase;
   margin-bottom: 40px;
