@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, CSSProperties } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Droplets, Flame, Zap, Brain, MessageSquare, Loader2 } from 'lucide-react';
 import axios from 'axios';
@@ -27,9 +27,9 @@ const Dashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex-center" style={{ height: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '16px' }}>
-        <Loader2 className="spinner" size={48} color="var(--primary)" />
-        <p style={{ color: 'var(--text-muted)' }}>Loading your health data...</p>
+      <div className="dashboard-loader">
+        <Loader2 className="spinner" size={48} />
+        <p>Loading your health data...</p>
       </div>
     );
   }
@@ -39,6 +39,10 @@ const Dashboard: React.FC = () => {
     weightTrend: [], 
     recentMeals: [] 
   };
+
+  const caloriesProgress = Math.min((summary.calories / 2500) * 100, 100);
+  const waterProgress = Math.min((summary.water / 2.5) * 100, 100);
+  const proteinProgress = Math.min((summary.protein / 120) * 100, 100);
 
   return (
     <div className="dashboard-grid animate-fade-in">
@@ -50,7 +54,10 @@ const Dashboard: React.FC = () => {
         </div>
         <div className="metric-value">{summary.calories} <span className="unit">kcal</span></div>
         <div className="progress-bar-container">
-          <div className="progress-bar" style={{ width: `${Math.min((summary.calories / 2500) * 100, 100)}%`, background: '#f97316' }}></div>
+          <div 
+            className="progress-bar orange" 
+            style={{ '--progress': `${caloriesProgress}%` } as CSSProperties}
+          ></div>
         </div>
         <div className="metric-footer">Daily Target: 2,500</div>
       </div>
@@ -62,7 +69,10 @@ const Dashboard: React.FC = () => {
         </div>
         <div className="metric-value">{summary.water.toFixed(1)} <span className="unit">L</span></div>
         <div className="progress-bar-container">
-          <div className="progress-bar" style={{ width: `${Math.min((summary.water / 2.5) * 100, 100)}%`, background: '#3b82f6' }}></div>
+          <div 
+            className="progress-bar blue" 
+            style={{ '--progress': `${waterProgress}%` } as CSSProperties}
+          ></div>
         </div>
         <div className="metric-footer">Daily Target: 2.5L</div>
       </div>
@@ -74,7 +84,10 @@ const Dashboard: React.FC = () => {
         </div>
         <div className="metric-value">{summary.protein} <span className="unit">g</span></div>
         <div className="progress-bar-container">
-          <div className="progress-bar" style={{ width: `${Math.min((summary.protein / 120) * 100, 100)}%`, background: '#8b5cf6' }}></div>
+          <div 
+            className="progress-bar purple" 
+            style={{ '--progress': `${proteinProgress}%` } as CSSProperties}
+          ></div>
         </div>
         <div className="metric-footer">Daily Target: 120g</div>
       </div>
@@ -136,7 +149,7 @@ const Dashboard: React.FC = () => {
             </>
           )}
         </div>
-        <button className="btn-outline">Ask AI Assistant</button>
+        <button className="btn-outline" title="View detailed AI analysis">Ask AI Assistant</button>
       </div>
 
       {/* Recent Activity */}
@@ -157,7 +170,7 @@ const Dashboard: React.FC = () => {
                   </div>
               </div>
             )) : (
-              <div className="empty-state" style={{ padding: '20px 0' }}>No meals logged today</div>
+              <div className="empty-state">No meals logged today</div>
             )}
          </div>
       </div>
@@ -165,7 +178,7 @@ const Dashboard: React.FC = () => {
       {/* AI Assistant Section */}
       <div className="chart-card glass span-3">
         <div className="card-header">
-          <MessageSquare size={20} className="text-primary" />
+          <MessageSquare size={20} />
           <h3>AI Health Assistant</h3>
         </div>
         <AIChat />

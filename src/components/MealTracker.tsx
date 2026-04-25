@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import { X, Loader2, Wand2, Mic } from 'lucide-react';
 import axios from 'axios';
 import './MealTracker.css';
@@ -10,8 +10,8 @@ interface MealTrackerProps {
 }
 
 const MealTracker: React.FC<MealTrackerProps> = ({ isOpen, onClose }) => {
-  const [description, setDescription] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [description, setDescription] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
   const [result, setResult] = useState<any>(null);
 
   const handleAnalyze = async () => {
@@ -28,7 +28,6 @@ const MealTracker: React.FC<MealTrackerProps> = ({ isOpen, onClose }) => {
       console.error(err);
       alert("Failed to analyze meal. Please check your connection or AI API key.");
     } finally {
-
       setLoading(false);
     }
   };
@@ -40,7 +39,14 @@ const MealTracker: React.FC<MealTrackerProps> = ({ isOpen, onClose }) => {
       <div className="modal-content glass animate-fade-in">
         <header className="modal-header">
           <h2>Track Your Meal</h2>
-          <button onClick={onClose} className="close-btn"><X size={20} /></button>
+          <button 
+            onClick={onClose} 
+            className="close-btn"
+            aria-label="Close modal"
+            title="Close"
+          >
+            <X size={20} />
+          </button>
         </header>
 
         <div className="modal-body">
@@ -50,16 +56,25 @@ const MealTracker: React.FC<MealTrackerProps> = ({ isOpen, onClose }) => {
             <textarea 
               placeholder="e.g., Two scrambled eggs with avocado toast and a black coffee"
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
               className="glass"
             />
-            <button className="voice-btn glass"><Mic size={20} /></button>
+            <button 
+                className="voice-btn glass" 
+                aria-label="Use voice input"
+                title="Voice Input"
+                type="button"
+            >
+                <Mic size={20} />
+            </button>
           </div>
 
           <button 
             onClick={handleAnalyze} 
             disabled={loading || !description}
             className="btn-primary analyze-btn"
+            type="button"
+            title="Analyze meal with AI"
           >
             {loading ? <Loader2 className="spinner" size={20} /> : <><Wand2 size={18} /> Analyze with AI</>}
           </button>
@@ -86,7 +101,13 @@ const MealTracker: React.FC<MealTrackerProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
               <p className="ai-note">{result.ai_reasoning}</p>
-              <button className="btn-primary save-btn" onClick={onClose}>Confirm & Save</button>
+              <button 
+                className="btn-primary save-btn" 
+                onClick={onClose}
+                title="Confirm and save meal"
+              >
+                Confirm & Save
+              </button>
             </div>
           )}
         </div>

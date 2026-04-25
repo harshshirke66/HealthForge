@@ -30,8 +30,8 @@ body {
 
 .glass {
   background: var(--bg-card);
-  backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border-glass);
   border-radius: 24px;
 }

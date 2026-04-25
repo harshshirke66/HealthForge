@@ -63,7 +63,13 @@
 .progress-bar {
   height: 100%;
   border-radius: 3px;
+  width: var(--progress, 0%);
+  transition: width 0.5s ease;
 }
+
+.progress-bar.orange { background: #f97316; }
+.progress-bar.blue { background: #3b82f6; }
+.progress-bar.purple { background: #8b5cf6; }
 
 .metric-footer {
   font-size: 0.8rem;
@@ -198,6 +204,26 @@
     background: rgba(139, 92, 246, 0.1);
 }
 
+.dashboard-loader {
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: var(--text-muted);
+}
+
+.dashboard-loader .spinner {
+  color: var(--primary);
+}
+
+.empty-state {
+  padding: 20px 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
 @media (max-width: 1024px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
@@ -206,3 +232,4 @@
     grid-column: span 1;
   }
 }
+

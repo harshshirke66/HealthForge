@@ -64,7 +64,13 @@ const AIChat: React.FC = () => {
           onKeyPress={(e) => e.key === 'Enter' && handleSend()}
           className="glass"
         />
-        <button onClick={handleSend} disabled={loading} className="send-btn">
+        <button 
+          onClick={handleSend} 
+          disabled={loading} 
+          className="send-btn"
+          aria-label="Send message"
+          title="Send"
+        >
           <Send size={20} />
         </button>
       </div>

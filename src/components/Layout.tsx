@@ -43,7 +43,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       <main className="main-content">
         <header className="main-header">
-          <h1>Welcome back, Alex</h1>
+          <h1>Welcome back, Harsh</h1>
           <div className="header-actions">
             <button className="btn-primary" onClick={() => setMealModalOpen(true)}>Track Meal</button>
           </div>
