@@ -6,14 +6,36 @@ import AuthLayout from '@/components/AuthLayout';
 export default function SignupPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: ''
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Mock signup flow
-    setTimeout(() => {
+    setError("");
+
+    try {
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to signup');
+
+      // Success - redirect to dashboard
+      localStorage.setItem('user', JSON.stringify(data.user));
       router.push('/dashboard');
-    }, 1500);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -23,6 +45,7 @@ export default function SignupPage() {
       type="signup"
     >
       <form className="auth-form" onSubmit={handleSubmit}>
+        {error && <div style={{ color: 'var(--accent-pink)', fontWeight: 'bold' }}>{error}</div>}
         <div className="form-group">
           <label htmlFor="name">Full Name</label>
           <input 
@@ -30,6 +53,8 @@ export default function SignupPage() {
             id="name" 
             placeholder="John Doe" 
             required 
+            value={formData.name}
+            onChange={(e) => setFormData({...formData, name: e.target.value})}
           />
         </div>
         <div className="form-group">
@@ -39,6 +64,8 @@ export default function SignupPage() {
             id="email" 
             placeholder="name@example.com" 
             required 
+            value={formData.email}
+            onChange={(e) => setFormData({...formData, email: e.target.value})}
           />
         </div>
         <div className="form-group">
@@ -46,12 +73,14 @@ export default function SignupPage() {
           <input 
             type="password" 
             id="password" 
-            placeholder="Min 8 characters" 
+            placeholder="••••••••" 
             required 
+            value={formData.password}
+            onChange={(e) => setFormData({...formData, password: e.target.value})}
           />
         </div>
         <button type="submit" className="auth-submit-btn" disabled={loading}>
-          {loading ? "Creating account..." : "Get Started"}
+          {loading ? "Creating account..." : "Sign Up"}
         </button>
       </form>
     </AuthLayout>

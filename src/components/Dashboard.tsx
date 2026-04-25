@@ -13,7 +13,10 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const response = await axios.get('/api/dashboard?userId=1');
+        const storedUser = localStorage.getItem('user');
+        const userId = storedUser ? JSON.parse(storedUser).id : '1';
+        
+        const response = await axios.get(`/api/dashboard?userId=${userId}`);
         setData(response.data);
       } catch (error) {
         console.error("Error fetching dashboard data", error);

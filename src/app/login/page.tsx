@@ -6,14 +6,35 @@ import AuthLayout from '@/components/AuthLayout';
 export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Mock login flow
-    setTimeout(() => {
+    setError("");
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Invalid credentials');
+
+      // Success - store in localStorage for demo
+      localStorage.setItem('user', JSON.stringify(data.user));
       router.push('/dashboard');
-    }, 1500);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -23,6 +44,7 @@ export default function LoginPage() {
       type="login"
     >
       <form className="auth-form" onSubmit={handleSubmit}>
+        {error && <div style={{ color: 'var(--accent-pink)', fontWeight: 'bold' }}>{error}</div>}
         <div className="form-group">
           <label htmlFor="email">Email Address</label>
           <input 
@@ -30,6 +52,8 @@ export default function LoginPage() {
             id="email" 
             placeholder="name@example.com" 
             required 
+            value={formData.email}
+            onChange={(e) => setFormData({...formData, email: e.target.value})}
           />
         </div>
         <div className="form-group">
@@ -39,6 +63,8 @@ export default function LoginPage() {
             id="password" 
             placeholder="••••••••" 
             required 
+            value={formData.password}
+            onChange={(e) => setFormData({...formData, password: e.target.value})}
           />
         </div>
         <button type="submit" className="auth-submit-btn" disabled={loading}>

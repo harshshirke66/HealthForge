@@ -18,9 +18,12 @@ const MealTracker: React.FC<MealTrackerProps> = ({ isOpen, onClose }) => {
     if (!description) return;
     setLoading(true);
     try {
+      const storedUser = localStorage.getItem('user');
+      const userId = storedUser ? JSON.parse(storedUser).id : '1';
+
       const response = await axios.post('/api/meals/analyze', {
         mealDescription: description,
-        userId: 1
+        userId: userId
       });
       
       setResult(response.data);
