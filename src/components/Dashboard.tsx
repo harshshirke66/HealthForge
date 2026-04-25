@@ -4,20 +4,28 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Droplets, Flame, Zap, Brain, MessageSquare, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import AIChat from './AIChat';
+import Onboarding from './Onboarding';
 import './Dashboard.css';
 
 const Dashboard: React.FC = () => {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [userId, setUserId] = useState<string>('1');
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         const storedUser = localStorage.getItem('user');
-        const userId = storedUser ? JSON.parse(storedUser).id : '1';
+        const id = storedUser ? JSON.parse(storedUser).id : '1';
+        setUserId(id);
         
-        const response = await axios.get(`/api/dashboard?userId=${userId}`);
+        const response = await axios.get(`/api/dashboard?userId=${id}`);
         setData(response.data);
+        
+        if (response.data.onboarded === false) {
+          setShowOnboarding(true);
+        }
       } catch (error) {
         console.error("Error fetching dashboard data", error);
       } finally {
@@ -48,7 +56,17 @@ const Dashboard: React.FC = () => {
   const proteinProgress = Math.min((summary.protein / 120) * 100, 100);
 
   return (
-    <div className="dashboard-grid animate-fade-in">
+    <>
+      {showOnboarding && (
+        <Onboarding 
+          userId={userId} 
+          onComplete={() => {
+            setShowOnboarding(false);
+            window.location.reload(); // Refresh to get updated stats
+          }} 
+        />
+      )}
+      <div className="dashboard-grid animate-fade-in">
       {/* Top row: Summary Cards */}
       <div className="metric-card glass glass-hover">
         <div className="metric-bg-pattern"></div>
@@ -60,7 +78,7 @@ const Dashboard: React.FC = () => {
         <div className="progress-bar-container">
           <div 
             className="progress-bar orange" 
-            style={{ width: `${caloriesProgress}%` } as CSSProperties}
+            style={{ '--progress': `${caloriesProgress}%` } as React.CSSProperties}
           ></div>
         </div>
         <div className="metric-footer">Daily Target: 2,500</div>
@@ -76,7 +94,7 @@ const Dashboard: React.FC = () => {
         <div className="progress-bar-container">
           <div 
             className="progress-bar blue" 
-            style={{ width: `${waterProgress}%` } as CSSProperties}
+            style={{ '--progress': `${waterProgress}%` } as React.CSSProperties}
           ></div>
         </div>
         <div className="metric-footer">Daily Target: 2.5L</div>
@@ -92,7 +110,7 @@ const Dashboard: React.FC = () => {
         <div className="progress-bar-container">
           <div 
             className="progress-bar purple" 
-            style={{ width: `${proteinProgress}%` } as CSSProperties}
+            style={{ '--progress': `${proteinProgress}%` } as React.CSSProperties}
           ></div>
         </div>
         <div className="metric-footer">Daily Target: 120g</div>
@@ -190,6 +208,7 @@ const Dashboard: React.FC = () => {
         <AIChat />
       </div>
     </div>
+    </>
   );
 };
 
